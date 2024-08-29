@@ -1,6 +1,6 @@
 [package]
 name = "ogg-table"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 
 description = "ogg-vorbis reader with fast random accesses"
@@ -12,4 +12,7 @@ readme = "README.md"
 anyhow = "1.0.86"
 byteorder = "1.5.0"
 symphonia-codec-vorbis = "0.5.4"
-symphonia-core = "0.5.4"
+symphonia-core = { version = "0.5.4", features = ["opt-simd"] }
+
+[profile.release]
+debug = true
