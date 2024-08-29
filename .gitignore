@@ -14,4 +14,5 @@ tokenizer.json
 vocab.json
 merges.txt
 *.ogg
+*.ogg_table
 *.wav
