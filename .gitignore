@@ -1,0 +1,17 @@
+target/
+_build/
+data/
+gen/.merlin
+**/*.rs.bk
+*.swp
+*.swo
+Cargo.lock
+__pycache__
+*~
+.*~
+*.bin
+tokenizer.json
+vocab.json
+merges.txt
+*.ogg
+*.wav
