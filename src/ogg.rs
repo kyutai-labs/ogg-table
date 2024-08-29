@@ -113,11 +113,7 @@ impl<R: std::io::Read + std::io::Seek> PacketReader<R> {
             None => anyhow::bail!("no data left"),
             Some(header) => header,
         };
-        if self
-            .current_header
-            .header_type
-            .has_flag(HeaderTypeFlag::Continuation)
-        {
+        if self.current_header.header_type.has_flag(HeaderTypeFlag::Continuation) {
             anyhow::bail!("continuations are not handled properly when seeking")
         }
         if move_to_last_segment {
@@ -135,8 +131,7 @@ impl<R: std::io::Read + std::io::Seek> PacketReader<R> {
                 }
             }
             self.segment_idx = n_to_skip;
-            self.reader
-                .seek(std::io::SeekFrom::Current(to_skip as i64))?;
+            self.reader.seek(std::io::SeekFrom::Current(to_skip as i64))?;
         }
         Ok(self.current_header.granule_position)
     }
@@ -171,11 +166,7 @@ impl<R: std::io::Read> PacketReader<R> {
             None => anyhow::bail!("empty file"),
             Some(header) => header,
         };
-        Ok(Self {
-            reader,
-            current_header,
-            segment_idx: 0,
-        })
+        Ok(Self { reader, current_header, segment_idx: 0 })
     }
 
     pub fn next_packet(&mut self) -> Result<Option<Vec<u8>>> {

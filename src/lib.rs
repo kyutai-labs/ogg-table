@@ -23,10 +23,7 @@ impl TableOfContent {
         let all_headers = ogg::all_headers(rdr)?;
         let entries: Vec<_> = all_headers
             .into_iter()
-            .map(|(file_pos, hdr)| Entry {
-                file_pos,
-                granule_position: hdr.granule_position,
-            })
+            .map(|(file_pos, hdr)| Entry { file_pos, granule_position: hdr.granule_position })
             .collect();
         Ok(Self { entries })
     }
@@ -40,10 +37,7 @@ impl TableOfContent {
         let mut entries = Vec::new();
         while let Ok(file_pos) = rdr.read_u64::<LittleEndian>() {
             let granule_position = rdr.read_u64::<LittleEndian>().unwrap();
-            entries.push(Entry {
-                file_pos,
-                granule_position,
-            });
+            entries.push(Entry { file_pos, granule_position });
         }
         Ok(Self { entries })
     }
@@ -58,9 +52,7 @@ impl TableOfContent {
     }
 
     pub fn last_entry_before(&self, start_pos: u64) -> Option<&Entry> {
-        let packet_idx = self
-            .entries
-            .partition_point(|entry| entry.granule_position < start_pos);
+        let packet_idx = self.entries.partition_point(|entry| entry.granule_position < start_pos);
         let mut packet_idx = packet_idx.saturating_sub(1);
         while packet_idx < self.entries.len() && self.entries[packet_idx].granule_position == 0 {
             packet_idx += 1;
