@@ -10,8 +10,7 @@ pub struct OggVorbisReader<R: std::io::Read> {
 impl<R: std::io::Read + std::io::Seek> OggVorbisReader<R> {
     /// Seek to an absolute position specified as a number of bytes in the file.
     pub fn seek(&mut self, header_bytes_pos: u64, move_to_last_segment: bool) -> Result<u64> {
-        self.packet_reader
-            .seek(header_bytes_pos, move_to_last_segment)
+        self.packet_reader.seek(header_bytes_pos, move_to_last_segment)
     }
 
     pub fn seek_granule_position(
@@ -19,8 +18,7 @@ impl<R: std::io::Read + std::io::Seek> OggVorbisReader<R> {
         target_granule_pos: u64,
         move_to_last_segment: bool,
     ) -> Result<u64> {
-        self.packet_reader
-            .seek_granule_position(target_granule_pos, move_to_last_segment)
+        self.packet_reader.seek_granule_position(target_granule_pos, move_to_last_segment)
     }
 }
 
@@ -46,21 +44,14 @@ impl<R: std::io::Read> OggVorbisReader<R> {
         params
             .for_codec(symphonia_core::codecs::CODEC_TYPE_VORBIS)
             .with_sample_rate(ident.audio_sample_rate)
-            .with_time_base(symphonia_core::units::TimeBase::new(
-                1,
-                ident.audio_sample_rate,
-            ))
+            .with_time_base(symphonia_core::units::TimeBase::new(1, ident.audio_sample_rate))
             .with_extra_data(Box::from(buf));
         let decoder = symphonia_codec_vorbis::VorbisDecoder::try_new(
             &params,
             &symphonia_core::codecs::DecoderOptions { verify: true },
         )?;
 
-        Ok(Self {
-            ident,
-            packet_reader,
-            decoder,
-        })
+        Ok(Self { ident, packet_reader, decoder })
     }
 
     pub fn channels(&self) -> u8 {
@@ -97,7 +88,10 @@ impl<R: std::io::Read> OggVorbisReader<R> {
                 }
                 to_skip = 0
             }
-            if all_data[0].len() > len_in_samples {
+            if all_data[0].len() >= len_in_samples {
+                for data in all_data.iter_mut() {
+                    data.truncate(len_in_samples)
+                }
                 break;
             }
         }
