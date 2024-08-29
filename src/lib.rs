@@ -3,6 +3,7 @@ use anyhow::Result;
 pub mod ogg;
 pub mod ogg_vorbis;
 pub mod vorbis;
+pub mod wav;
 
 pub use ogg_vorbis::OggVorbisReader;
 
