@@ -22,5 +22,14 @@ fn main() -> Result<()> {
     let data = &all_data[0][start_in_samples..start_in_samples + len_in_samples];
     let mut out_file = std::fs::File::create("foo2.wav")?;
     ogg_table::wav::write_wav(&mut out_file, &data, sample_rate)?;
+
+    for i in 0..1000 {
+        if &selected_data[0][i..i + 100] == &data[..100] {
+            println!("offset: {i}")
+        }
+        if &selected_data[0][..100] == &data[i..i + 100] {
+            println!("offset -{i}")
+        }
+    }
     Ok(())
 }
